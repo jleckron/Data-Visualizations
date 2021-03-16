@@ -10,6 +10,6 @@ Program 8 - A scatter plot of energy consumption by GDP of countries in 2010
 Program 9 - Examples and tutorial of Voronoi Diagrams in D3.js
 
 ## Associated Projects:
-- See France Population Density and GDP per Capita TopoJSON [here](https://jleckron.github.io/FranceTopoJson/)
+- See France Population Density and GDP per Capita TopoJSON [here](https://github.com/jleckron/FranceTopoJson)
 
-- See World Airports Voronoi Diagram [here](https://jleckron.github.io/WorldAirportsVoronoi/)
+- See World Airports Voronoi Diagram [here](https://github.com/jleckron/WorldAirportsVoronoi)
