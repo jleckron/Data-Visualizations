@@ -12,4 +12,4 @@ Program 9 - Examples and tutorial of Voronoi Diagrams in D3.js
 ## Associated Projects:
 - See France Population Density and GDP per Capita TopoJSON [here](https://jleckron.github.io/FranceTopoJson/)
 
--See World Airports Voronoi Diagram [here](https://jleckron.github.io/WorldAirportsVoronoi/)
+- See World Airports Voronoi Diagram [here](https://jleckron.github.io/WorldAirportsVoronoi/)
