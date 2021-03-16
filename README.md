@@ -3,7 +3,7 @@ Data Visualizations for UCSC CSE 163
 
 Program 6 - A bar graph presenting GDP by country for 2020 [Visualization](https://jleckron.github.io/BarGraph/)
 
-Program 7 - A line graph presenting energy usage by country
+Program 7 - A line graph presenting energy usage by country [Visualization](https://jleckron.github.io/MultiLineGraph/)
 
 Program 8 - A scatter plot of energy consumption by GDP of countries in 2010
 
