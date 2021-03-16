@@ -1,0 +1,24 @@
+body{    
+    background-color: #E6E6E6;
+}
+
+p
+{    
+    text-indent: 40px;
+}
+
+/* These are .axis path and .axis line commands as described in the book.
+   They can be combined and styled together to maintain uniform appearance. 
+   These values change the color and weight of the axes */
+.axis path, 
+.axis line {
+    stroke: black;
+    shape-rendering: crispEdges; 
+}
+
+
+.axis text{    
+    font: Times;   
+    font-size: 12px;   
+    font-weight: bold;
+}
