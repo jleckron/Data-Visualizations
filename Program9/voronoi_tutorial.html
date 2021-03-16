@@ -1,0 +1,153 @@
+<!--  TUTORIAL
+
+Here is how to construct a basic voronoi diagram!
+
+1.  Define your svg element as you would in any other d3 project
+
+2.  Create a data set of (x,y) coordinate points.
+    Points can be chosen specifically (as shown below), randomized, or loaded from an input file. 
+
+
+3.  We utilize the command:
+        d3.voronoi()
+
+
+3a. If you want a visualization of voronoi polygons on your data set, call:
+        .polygons(data)
+    This will return a sparse array of polygons, one for each unique data point. 
+    If calling .polygons(), you are required to also call:
+        .extent([x0, y0], [x1, y1])
+    This defines a clipping region for the formation of the polygons. 
+
+
+3b. Otherwise, if you want a visualization of Delaunay triangulations, call:
+        .triangles(data)
+    This will return an array of triangles forming the Delaunay triangulation.
+
+
+Or both, but be sure to assign both to their own output variable as shown below!
+
+
+You can also call:
+    .links(data)
+which will return an array of links (lines) to form the triangulation mesh. This is equivalent to calling triangles(data), but they do not have the same drawing implementation. Instead of drawing on join for each triangle or polygon, you simply draw form start point to end point as specified by the returned array.
+
+
+4.  Now we want to draw. 
+
+    - We append a "g" element svg for each array output (Here for both cells and edges)
+    - We pass the data to the "g" element via:     .data(cells)  or .data(edges), or whatever you named your array variables
+    - Then .enter()
+
+    - Next append a "path" element to the svg
+    - And define it with the associated class defined in the CSS style section
+    - Finally, use .attr("d", "M,L,Z") to draw the paths
+        M defines the starting point of the drawing "pen"   (moveto)
+        L defines the next point to draw to                 (lineto)
+        Z defines the end point of the draw                 (closepath)
+      More information on paths can be found here: https://www.dashingd3js.com/svg-paths-and-d3js
+
+    This is also where you can add stroke and fill attributes to color your visualization. 
+        
+
+5.  (Optional but recommended)
+    Finally, we want to place a dot at each data point in order to easily understand the functions of d3.voronoi()
+
+    - Append another "g" element  of class circle to the svg
+    - Pass the data in your data set array to the "g" element .data(data) and .enter()
+    - Append a "circle" element
+    - Tranform it to the position of the data point
+    - Define the radius of the dot to be drawn
+    - And fill 
+
+    
+That completes the tutorial on a simple Voronoi Diagram and/or Delaunay Triangulation!
+
+-->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.cell-border {
+    fill: none;
+    stroke: #777;
+
+}
+    
+.edge-border {
+    fill: none;
+    stroke: #ccc;
+}
+
+
+</style>
+<body>
+    <script type= "text/javascript" src="http://d3js.org/d3.v5.min.js"></script>       
+<script>
+
+var width = 960,
+    height = 500;
+    
+//Define svg element width and height
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Define data set 
+var data = [
+    [300, 400],
+    [100, 450],
+    [203, 80],
+    [66, 223],
+    [632, 424],
+    [446, 212],
+    [480, 74],
+    [500, 116],
+    [801, 129],
+    [300, 200]];
+    
+  
+// Define array of cells of voronoi diagram   
+var cells = d3.voronoi()
+    .extent([[0, 0], [width, height]])
+    .polygons(data);
+    
+// Define array of edges of delaunay triangulation
+var edges = d3.voronoi()
+    .triangles(data);
+    
+    
+// Draw edges of triangulations returned from voronoi diagram
+svg.append("g")
+    .selectAll("g")
+    .data(edges)
+    .enter()
+    .append("path")
+    .attr("class", "edge-border")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+    
+// Draw cells based on cells array returned from voronoi diagram
+    
+svg.append("g")
+    .selectAll("g")
+    .data(cells)
+    .enter()
+    .append("path")
+    .attr("class", "cell-border")
+    .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+    
+
+// Draw a dot at each data point
+svg.append("g")
+    .attr("class", "dot")
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("transform", function(d) { return "translate(" + d + ")"; }) 
+    .attr("r", 5)
+    .attr("fill", "black"); 
+
+</script>
+    

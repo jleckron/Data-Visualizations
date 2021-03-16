@@ -1,0 +1,10 @@
+Additional Effort:
+
+To make voronoi_example.html:
+    1. Ended up creating the example from scratch while referencing some of the linked projects in order to better learn, undertand, and showcase the usages and mathematics of d3.voronoi.
+    2. Created three interactive svg elements in order to demonstrate the different ways d3.voronoi() can be called and how Voronoi diagrams and Delaunay triangulations work.
+    3. Sourced and implemented a formula to find the center of a circle given three points in order to show why the Delaunay Triangulation forms the triangles that it does (It triangulates with at least 2 other points where the circle defined by those 3 points will not contain any other points in the set).
+    
+To make voronoi_tutorial.html:
+    1. Created a very basic data set that does not randomize in order to provide a consistent visualization of basic d3.voronoi commands. 
+    2. Included an English instruction commented at the top of the file on minimum neccesary steps to create a voronoi diagram and/or Delaunay Triangulation. 

@@ -1,0 +1,292 @@
+<!-- 
+
+Sources referenced:
+    https://github.com/d3/d3-voronoi
+    https://bl.ocks.org/Fil/b91d97962d99be2145853c0cfb9c115d
+    https://observablehq.com/@d3/circle-dragging-iii
+    https://bl.ocks.org/mbostock/6675193  
+
+-->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.cell-border {
+    fill: none;
+    stroke: #777;
+
+}
+.color-cell-border{
+    stroke: #000;
+}
+    
+.edge-border {
+    fill: none;
+    stroke: #59d;
+    opacity: .4;
+}
+
+.circle {
+    stroke: blue;
+    fill: none;
+    opacity: .25;
+}
+
+
+</style>
+<body>
+    <script type= "text/javascript" src="http://d3js.org/d3.v5.min.js"></script>       
+    <p><u>Voronoi Diagrams and Delaunay Triangulation:</u>  Mouse Over Any Canvas to See How it works!</p><br>
+<script>
+
+var width = 960,
+    height = 600;
+
+//returns a random number from (min, max) values
+var randomX = d3.randomUniform(20, width-20),
+    randomY = d3.randomUniform(40, height/2-20);
+
+    
+var colors = d3.schemeCategory10;
+    colors = colors.concat(d3.schemeAccent);
+    
+    console.log("Array of Colors");
+    console.log(colors);
+    
+//sets number of circle to view
+//ie. for i in range (30), call random number functions,
+    //filter makes sure that the randomized points are in the viewing window.
+    //values of width/height in filter should be adjusted accordingly if you plan to change the voronoi extent
+var data = d3.range(15)
+    .map(function() { return [Math.round(randomX()), Math.round(randomY())]; })
+    .filter(function(d) { return 0 <= d[0] && d[0] <= width && 0 <= d[1] && d[1] <= height/2; });
+    
+    
+//Define svg element with mousemove attribute, width and height
+var svg0 = d3.select("body").append("svg")
+    .on("mousemove", move)
+    .attr("width", width)
+    .attr("height", height/2);
+    
+    
+var svg = d3.select("body").append("svg")
+    .on("mousemove", move)
+    .attr("width", width)
+    .attr("height", height/2);
+
+var svg2 = d3.select("body").append("svg")
+    .on("mousemove", move)
+    .attr("y", height)
+    .attr("width", width)
+    .attr("height", height/2);
+
+draw();
+
+
+//function called on canvas mouse move
+// sets the first data point to the mouse position and recalls draw function
+function move(){
+    data[0] = d3.mouse(this);
+    draw();
+}
+
+function draw(){
+    
+    //clears the svg elements so newly drawn points at mouse do not accumulate
+    d3.selectAll("svg > *").remove();
+    
+    //add a border around first svg element since one will not be drawn given no cells are appended to it
+    svg0.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height/2)
+        .attr("fill", "none")
+        .attr("stroke", "#777");
+    
+    
+    // -- Defines the voronoi diagram - a set of polygons containing points closest to the data point.
+    var cells = d3.voronoi()
+        // --- Extent specifies where the view window is. Required if defining polygons
+        // --- Here the view window is set at -1,-1 to width+1, height+1.
+        // --- If you were to put in [0,0](top left), [width,height](bottom right), you would see an outline around the diagram area. 
+        // --- Measured in pixels, so larger values will move the viewing area smaller towards the center of the screen.
+        .extent([[0,0], [width, height/2]])
+        //.extent([[-1, -1], [width+1, height+1]])
+        .polygons(data);
+    
+    // --- Can also call triangles, which will construct Dalaunay triangles
+    //     https://en.wikipedia.org/wiki/Delaunay_triangulation
+    // --- There are also links, but it requires installing Dalaunay
+    var edges = d3.voronoi()
+        .triangles(data);
+
+
+
+        // --- If voronoi is called on polygons, cells contains a sparse array of cells, one for each data point
+        // --- If called on triangles, cells contains an array of edges
+        console.log("Array of cells");
+        console.log(cells);
+        console.log("Array of triangles");
+        console.log(edges);
+
+    
+//makes an array of dictionary objects with an x, y, r key in order to draw the triangulation circles
+var centers = [];
+for(let i=0; i<edges.length; i++){
+    centers[i] = CalculateCircleCenter({x:edges[i][0][0], y:edges[i][0][1]},
+                                    {x:edges[i][1][0], y:edges[i][1][1]},
+                                    {x:edges[i][2][0], y:edges[i][2][1]});
+};   
+    
+console.log("Array of Circles");
+console.log(centers);
+    
+// Draws triangulation circles to their own svg element
+svg0.append("g")
+    .attr("class", "circle")
+    .selectAll("circle")
+    .data(centers)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d){ return d.x})
+    .attr("cy", function(d) {return d.y})
+    .attr("r", function(d){return d.r});
+    
+    
+
+    // Define edges variable for triangulation circles svg
+    var edge0 = svg0.append("g")
+        .selectAll("g")
+        .data(edges)
+        .enter();
+
+    // Define cells variable based on cells returned from voronoi diagram
+    var cell = svg.append("g")
+        .selectAll("g")
+        .data(cells)
+        .enter();
+    
+    // Defines edges of triangulations returned from voronoi diagram
+    var edge = svg.append("g")
+        .selectAll("g")
+        .data(edges)
+        .enter();
+    
+    // Defines colored cells to be drawn on second svg element
+    var colorCell = svg2.append("g")
+        .selectAll("g")
+        .data(cells)
+        .enter();
+    
+
+    
+    //define paths between data points
+        // --- attr "d" draws from start point M along path L to endpoint Z
+        //     drawing "pen" will start at first data point, and draw to each next datapoint
+        // --- https://www.dashingd3js.com/svg-paths-and-d3js
+    
+    cell.append("path")
+        .attr("class", "cell-border")
+        .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+
+    //defines paths between edges of Dalaunay triangulation
+    edge0.append("path")
+        .attr("class", "cell-border")
+        .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+    edge.append("path")
+        .attr("class", "edge-border")
+        .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+    
+    //defines paths and fill between data points for the colored svg element
+    colorCell.append("path")
+        .attr("class", "color-cell-border")
+        .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+        .attr("fill", function(d, i) { return colors[i%colors.length]});
+
+    
+    //draws a colored circle at each data point -- straightforward
+    svg0.append("g")
+        .attr("class", "dot")
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("transform", function(d) { return "translate(" + d + ")"; }) 
+        .attr("r", 5)
+        .attr("fill", function(d, i) {return colors[i%colors.length]})
+        .attr("stroke", "black");
+    svg.append("g")
+        .attr("class", "dot")
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("transform", function(d) { return "translate(" + d + ")"; }) 
+        .attr("r", 5)
+        .attr("fill", function(d, i) {return colors[i%colors.length]})
+        .attr("stroke", "black");
+    //draws a black circle at each data point
+    svg2.append("g")
+        .attr("class", "dot")
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("transform", function(d) { return "translate(" + d + ")"; }) 
+        .attr("r", 5)
+        .attr("fill", "black");
+    
+    
+    //give a label to each svg element
+    svg0.append("text")
+        .style("text-anchor", "top")
+        .style("dominant-baseline", "hanging")
+        .text("Delaunay Triangulations In Black With Circumcircles In Blue");
+    svg.append("text")
+        .style("text-anchor", "top")
+        .style("dominant-baseline", "hanging")
+        .text("Voronoi Polygons Outlined In Black With Delaunay Triangulations In Blue");
+    svg2.append("text")
+        .style("text-anchor", "top")
+        .style("dominant-baseline", "hanging")
+        .attr("fill", "white")
+        .text("Colored Voronoi Polygons");
+        
+}
+    
+    
+//sourced from https://stackoverflow.com/questions/32861804/how-to-calculate-the-centre-point-of-a-circle-given-three-points
+//formula for finding the center point of a circle given three points
+function CalculateCircleCenter(A,B,C){
+    var yDelta_a = B.y - A.y;
+    var xDelta_a = B.x - A.x;
+    var yDelta_b = C.y - B.y;
+    var xDelta_b = C.x - B.x;
+
+    center = [];
+
+    var aSlope = yDelta_a / xDelta_a;
+    var bSlope = yDelta_b / xDelta_b;
+
+    center.x = (aSlope*bSlope*(A.y - C.y) + bSlope*(A.x + B.x) - aSlope*(B.x+C.x) )/(2* (bSlope-aSlope) );
+    center.y = -1*(center.x - (A.x+B.x)/2)/aSlope +  (A.y+B.y)/2;
+    center.r = Math.sqrt(Math.pow(center.x-A.x,2) + Math.pow(center.y-A.y,2));
+    return center;
+}
+    
+
+
+</script>
+<br>
+<p>General Information on Voronoi Diagrams:<br>
+    <a href="https://github.com/d3/d3-voronoi">More on Voronoi Usage</a><br>
+    <a href="https://en.wikipedia.org/wiki/Delaunay_triangulation">More on Delaunay Triangulation</a><br>
+</p>
+<p>Other Visualizations Referenced:<br>
+    <a href="https://bl.ocks.org/Fil/b91d97962d99be2145853c0cfb9c115d">Basic Voronoi Diagram</a><br>
+    <a href="https://observablehq.com/@d3/circle-dragging-iii">Draggable Circle Voronoi</a><br>
+    <a href="https://bl.ocks.org/mbostock/6675193  ">Canvas Voronoi</a><br>
+</p>
+
