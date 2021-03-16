@@ -1,13 +1,21 @@
 # Data-Visualizations
 Data Visualizations for UCSC CSE 163
 
-Program 6 - A bar graph presenting GDP by country for 2020 [Visualization](https://jleckron.github.io/BarGraph/)
+## A bar graph presenting GDP by country for 2020 
+-[Repository](https://github.com/jleckron/BarGraph)
+-[Visualization](https://jleckron.github.io/BarGraph/)
 
-Program 7 - A line graph presenting energy usage by country [Visualization](https://jleckron.github.io/MultiLineGraph/)
+## A line graph presenting energy usage by country 
+[Repository](https://github.com/jleckron/MultiLineGraph)
+[Visualization](https://jleckron.github.io/MultiLineGraph/)
 
-Program 8 - A scatter plot of energy consumption by GDP of countries in 2010
+## A scatter plot of energy consumption by GDP of countries in 2010
+[Repository](https://github.com/jleckron/ScatterPlot)
+[Visualization](https://jleckron.github.io/ScatterPlot/)
 
-Program 9 - Examples and tutorial of Voronoi Diagrams in D3.js
+## Examples and tutorial of Voronoi Diagrams in D3.js
+[Repository](https://github.com/jleckron/Voronoi)
+[Visualization]()
 
 ## Associated Projects:
 - See France Population Density and GDP per Capita TopoJSON [Repository](https://github.com/jleckron/FranceTopoJson) and [Visualization](https://jleckron.github.io/FranceTopoJson/)
