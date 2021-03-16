@@ -17,7 +17,10 @@ Data Visualizations for UCSC CSE 163
 - [Repository](https://github.com/jleckron/Voronoi)</br>
 - [Visualization]()
 
-## Associated Projects:
-- See France Population Density and GDP per Capita TopoJSON [Repository](https://github.com/jleckron/FranceTopoJson) and [Visualization](https://jleckron.github.io/FranceTopoJson/)
+## France Population Density and GDP per Capita TopoJSON 
+- [Repository](https://github.com/jleckron/FranceTopoJson)</br>
+- [Visualization](https://jleckron.github.io/FranceTopoJson/)
 
-- See World Airports Voronoi Diagram [Repository](https://github.com/jleckron/WorldAirportsVoronoi) and [Visualization](https://jleckron.github.io/WorldAirportsVoronoi/)
+## World Airports Voronoi Diagram 
+- [Repository](https://github.com/jleckron/WorldAirportsVoronoi)</br>
+- [Visualization](https://jleckron.github.io/WorldAirportsVoronoi/)
