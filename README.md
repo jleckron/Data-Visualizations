@@ -5,7 +5,7 @@ Data Visualizations for UCSC CSE 163
 - [Repository](https://github.com/jleckron/BarGraph)</br>
 - [Visualization](https://jleckron.github.io/BarGraph/)
 
-## A line graph presenting energy usage by country 
+## A line graph presenting energy consumption per capita by country 
 - [Repository](https://github.com/jleckron/MultiLineGraph)</br>
 - [Visualization](https://jleckron.github.io/MultiLineGraph/)
 
